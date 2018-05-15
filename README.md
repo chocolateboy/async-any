@@ -1,7 +1,5 @@
 # async-any
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/chocolateboy/async-any.svg)](https://greenkeeper.io/)
-
 [![Build Status](https://secure.travis-ci.org/chocolateboy/async-any.svg)](http://travis-ci.org/chocolateboy/async-any)
 [![NPM Version](http://img.shields.io/npm/v/async-any.svg)](https://www.npmjs.org/package/async-any)
 
