@@ -75,7 +75,7 @@ a promise is returned which is fulfilled/rejected by the corresponding result/er
 
 I wanted a lightweight version of [async-done](https://www.npmjs.com/package/async-done)
 without the [bugs](https://github.com/gulpjs/async-done/issues/36), with stricter detection
-of promises and observables, with an optional promisified result, and with browser support.
+of promises and observables, with an optional promise API, and with browser support.
 
 ## Why Not?
 
