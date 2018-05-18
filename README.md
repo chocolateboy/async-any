@@ -38,21 +38,13 @@ async-any - manage various forms of asynchronous completion in a uniform way
 import asyncAny from 'async-any'
 
 // async task taking a `done` callback
-asyncAny(
-    done => get(id, done),
-    (error, result) => {
-        if (!error) console.log(result)
-    }
-)
+asyncAny(done => fs.stat(path, done), (error, result) => { ... })
 
 // async task returning a promise or observable
-asyncAny(
-    () => fetch(url),
-    (error, result) => { ... }
-)
+asyncAny(() => fetch(url), (error, result) => { ... })
 
 // returns a promise if the callback is omitted
-const result = await asyncAny(done => get(id, done))
+const result = await asyncAny(task)
 ```
 
 # DESCRIPTION
@@ -93,16 +85,16 @@ If you need support for these, use async-done.
 **Signature**: `asyncAny(callback: (done: Errback) ⇒ Promise|Observable|void) ⇒ Promise`
 
 ```javascript
-function getResource (id) {
-    asyncAny(done => get(id, done), (error, result) => {
+function runTask (task) {
+    asyncAny(task, (error, result) => {
         if (!error) console.log('got result:', result)
     })
 }
 
 // or
 
-async function getResource (id) {
-    const result = await asyncAny(done => get(id, done))
+async function runTask (task) {
+    const result = await asyncAny(task)
     console.log('got result:', result)
 }
 ```
