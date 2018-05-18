@@ -97,10 +97,9 @@ function which can be used to signal completion. Alternatively, the task can ret
 a promise or an observable and will be deemed complete when that "future"
 succeeds or fails.
 
-Once the completion of the task is signaled by one of these methods, the final
-error/result is forwarded to the callback. If the callback is omitted,
-a promise is returned, which is fulfilled/rejected by the corresponding
-result/error.
+Once the task has completed, its error/result is forwarded to the callback.
+If the callback is omitted, a promise is returned, which is fulfilled/rejected
+by the corresponding result/error.
 
 If the task returns a value which is both a promise and an observable, it is
 treated as a promise.
@@ -135,7 +134,7 @@ The following Gulp tasks are available:
 
 # VERSION
 
-0.0.3
+0.0.4
 
 # AUTHOR
 

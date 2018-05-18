@@ -1,3 +1,7 @@
+## 0.0.4 - 2018-05-18
+
+* doc tweaks
+
 ## 0.0.3 - 2018-05-18
 
 * add missing runtime dependency

@@ -1,7 +1,7 @@
 {
     "name": "async-any",
     "author": "chocolateboy",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Manage various forms of asynchronous completion in a uniform way",
     "repository": "chocolateboy/async-any",
     "license": "Artistic-2.0",
