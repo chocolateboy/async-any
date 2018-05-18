@@ -44,7 +44,7 @@ asyncAny(done => fs.stat(path, done), (error, result) => { ... })
 asyncAny(() => fetch(url), (error, result) => { ... })
 
 // returns a promise if the callback is omitted
-const result = await asyncAny(task)
+let result = await asyncAny(task)
 ```
 
 # DESCRIPTION
@@ -53,21 +53,12 @@ This module exports a function which provides a uniform way to handle tasks whic
 signal completion asynchronously — either by calling a callback, returning a promise,
 or returning an [observable](https://github.com/tc39/proposal-observable).
 
-It takes a callback and a continuation function. The callback is passed a `done`
-["errorback"](http://thenodeway.io/posts/understanding-error-first-callbacks/)
-function which can be used to signal completion. Alternatively, the callback can
-return a promise or an observable and will be deemed complete once that "future"
-succeeds or fails.
-
-Once the completion of the callback is signaled by one of these methods, the final
-error/result is forwarded to the continuation. If the continuation is omitted,
-a promise is returned which is fulfilled/rejected by the corresponding result/error.
-
 ## Why?
 
 I wanted a lightweight version of [async-done](https://www.npmjs.com/package/async-done)
-without the [bugs](https://github.com/gulpjs/async-done/issues/36), with stricter detection
-of promises and observables, with an optional promise API, and with browser support.
+without the [bugs](https://github.com/gulpjs/async-done/issues/36), with stricter
+detection of promises and observables, with an optional promise API, and with browser
+support.
 
 ## Why Not?
 
@@ -80,9 +71,10 @@ If you need support for these, use async-done.
 
 ## asyncAny (default)
 
-**Signature**: `asyncAny(callback: (done: Errback) ⇒ Promise|Observable|void, continuation: Errback) ⇒ void`
+**Signature**:
 
-**Signature**: `asyncAny(callback: (done: Errback) ⇒ Promise|Observable|void) ⇒ Promise`
+* asyncAny(task: (done: Errback) ⇒ Promise|Observable|void, callback: Errback) ⇒ void
+* asyncAny(task: (done: Errback) ⇒ Promise|Observable|void) ⇒ Promise
 
 ```javascript
 function runTask (task) {
@@ -94,19 +86,24 @@ function runTask (task) {
 // or
 
 async function runTask (task) {
-    const result = await asyncAny(task)
+    let result = await asyncAny(task)
     console.log('got result:', result)
 }
 ```
 
-Takes a callback, which is passed a Node-style "errorback" function, and a continuation function.
-Once the callback is complete, its error and result are passed into the continuation.
+Takes an asynchronous task (function) and a callback. The task is passed a `done`
+["errorback"](http://thenodeway.io/posts/understanding-error-first-callbacks/)
+function which can be used to signal completion. Alternatively, the task can return
+a promise or an observable and will be deemed complete when that "future"
+succeeds or fails.
 
-Completion of the callback is signalled by calling `done`, or on the fulfilment or rejection of its
-return value if it returns a promise or observable. If a continuation function isn't supplied,
-a promise is returned which is fulfilled by the result or rejected by the error.
+Once the completion of the task is signaled by one of these methods, the final
+error/result is forwarded to the callback. If the callback is omitted,
+a promise is returned, which is fulfilled/rejected by the corresponding
+result/error.
 
-If the callback returns a value which is both a promise and an observable, it is treated as a promise.
+If the task returns a value which is both a promise and an observable, it is
+treated as a promise.
 
 # DEVELOPMENT
 
