@@ -99,8 +99,8 @@ async function runTask (task) {
 }
 ```
 
-Takes a callback which is passed a Node-style "errorback" function. Once the callback is complete,
-its error and result are passed into the continuation.
+Takes a callback, which is passed a Node-style "errorback" function, and a continuation function.
+Once the callback is complete, its error and result are passed into the continuation.
 
 Completion of the callback is signalled by calling `done`, or on the fulfilment or rejection of its
 return value if it returns a promise or observable. If a continuation function isn't supplied,
