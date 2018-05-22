@@ -1,14 +1,15 @@
 import asyncAny from '../dist/async-any.js'
 import test     from 'ava'
+import sleep    from 'p-promise'
 
 const { DELAY, ERROR, RESULT } = require('./config.json')
 
 function resolve (done) {
-    setTimeout(() => done(null, RESULT), DELAY)
+    sleep(DELAY).then(() => done(null, RESULT))
 }
 
 function reject (done) {
-    setTimeout(() => done(ERROR), DELAY)
+    sleep(DELAY).then(() => done(ERROR))
 }
 
 test.cb('callback (✔)', t => {

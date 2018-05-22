@@ -1,5 +1,6 @@
 import asyncAny   from '../dist/async-any.js'
 import test       from 'ava'
+import sleep      from 'p-promise'
 import Observable from 'zen-observable'
 
 const { DELAY, ERROR, RESULT } = require('./config.json')
@@ -8,10 +9,10 @@ test.cb('resolve multiple times', t => {
     t.plan(2)
 
     function resolve (done) {
-        setTimeout(() => {
+        sleep(DELAY).then(() => {
             done(null, RESULT)
             done(null, RESULT)
-        }, DELAY)
+        })
     }
 
     function callback (error, result) {
@@ -27,10 +28,10 @@ test.cb('reject multiple times', t => {
     t.plan(2)
 
     function reject (done) {
-        setTimeout(() => {
+        sleep(DELAY).then(() => {
             done(ERROR)
             done(ERROR)
-        }, DELAY)
+        })
     }
 
     function callback (error, result) {
@@ -46,9 +47,9 @@ test.cb('pass a falsey result when rejecting a callback', t => {
     t.plan(2)
 
     function reject (done) {
-        setTimeout(() => {
+        sleep(DELAY).then(() => {
             done(ERROR, false)
-        }, DELAY)
+        })
     }
 
     function callback (error, result) {
@@ -64,9 +65,9 @@ test.cb('pass a truthy result when rejecting a callback', t => {
     t.plan(2)
 
     function reject (done) {
-        setTimeout(() => {
+        sleep(DELAY).then(() => {
             done(ERROR, true)
-        }, DELAY)
+        })
     }
 
     function callback (error, result) {
@@ -83,9 +84,9 @@ test.cb('pass a falsey error when rejecting a promise', t => {
 
     function reject () {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
+            sleep(DELAY).then(() => {
                 reject(false) // eslint-disable-line prefer-promise-reject-errors
-            }, DELAY)
+            })
         })
     }
 
@@ -104,10 +105,10 @@ test.cb('return a hybrid promise (✔) / observable (x)', t => {
     function resolve () {
         // reject the observable and resolve the promise
         const observer = new Observable(observer => {
-            setTimeout(() => {
+            sleep(DELAY).then(() => {
                 t.fail()
                 observer.error(ERROR)
-            }, DELAY)
+            })
         })
 
         observer.then = function (onFulfilled, onRejected) {
@@ -133,11 +134,11 @@ test.cb('return a hybrid promise (x) / observable (✔)', t => {
     function reject () {
         // resolve the observable and reject the promise
         const observer = new Observable(observer => {
-            setTimeout(() => {
+            sleep(DELAY).then(() => {
                 t.fail()
                 observer.next(RESULT)
                 observer.complete()
-            }, DELAY)
+            })
         })
 
         observer.then = function (onFulfilled, onRejected) {

@@ -39,6 +39,7 @@
         "gulp-changed": "^3.2.0",
         "gulp-eslint": "^4.0.2",
         "lodash.merge": "^4.6.1",
+        "p-sleep": "^1.1.0",
         "zen-observable": "^0.8.8"
     },
     "keywords": [
