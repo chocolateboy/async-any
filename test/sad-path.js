@@ -14,13 +14,13 @@ test.cb('resolve multiple times', t => {
         }, DELAY)
     }
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.falsy(error)
         t.is(result, RESULT)
         t.end()
     }
 
-    asyncAny(resolve, continuation)
+    asyncAny(resolve, callback)
 })
 
 test.cb('reject multiple times', t => {
@@ -33,16 +33,16 @@ test.cb('reject multiple times', t => {
         }, DELAY)
     }
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.is(error, ERROR)
         t.falsy(result)
         t.end()
     }
 
-    asyncAny(reject, continuation)
+    asyncAny(reject, callback)
 })
 
-test.cb('pass a falsey second value when rejecting', t => {
+test.cb('pass a falsey result when rejecting a callback', t => {
     t.plan(2)
 
     function reject (done) {
@@ -51,16 +51,16 @@ test.cb('pass a falsey second value when rejecting', t => {
         }, DELAY)
     }
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.is(error, ERROR)
         t.is(result, false)
         t.end()
     }
 
-    asyncAny(reject, continuation)
+    asyncAny(reject, callback)
 })
 
-test.cb('pass a truthy second value when rejecting', t => {
+test.cb('pass a truthy result when rejecting a callback', t => {
     t.plan(2)
 
     function reject (done) {
@@ -69,13 +69,13 @@ test.cb('pass a truthy second value when rejecting', t => {
         }, DELAY)
     }
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.is(error, ERROR)
         t.is(result, true)
         t.end()
     }
 
-    asyncAny(reject, continuation)
+    asyncAny(reject, callback)
 })
 
 test.cb('pass a falsey error when rejecting a promise', t => {
@@ -89,13 +89,13 @@ test.cb('pass a falsey error when rejecting a promise', t => {
         })
     }
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.truthy(error)
         t.falsy(result)
         t.end()
     }
 
-    asyncAny(reject, continuation)
+    asyncAny(reject, callback)
 })
 
 test.cb('return a hybrid promise (✔) / observable (x)', t => {
@@ -118,13 +118,13 @@ test.cb('return a hybrid promise (✔) / observable (x)', t => {
         return observer
     }
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.falsy(error)
         t.is(result, RESULT)
         t.end()
     }
 
-    asyncAny(resolve, continuation)
+    asyncAny(resolve, callback)
 })
 
 test.cb('return a hybrid promise (x) / observable (✔)', t => {
@@ -148,11 +148,11 @@ test.cb('return a hybrid promise (x) / observable (✔)', t => {
         return observer
     }
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.is(error, ERROR)
         t.falsy(result)
         t.end()
     }
 
-    asyncAny(reject, continuation)
+    asyncAny(reject, callback)
 })

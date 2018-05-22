@@ -15,28 +15,28 @@ function reject () {
     })
 }
 
-test.cb('continuation (✔)', t => {
+test.cb('callback (✔)', t => {
     t.plan(2)
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.falsy(error)
         t.is(result, RESULT)
         t.end()
     }
 
-    asyncAny(resolve, continuation)
+    asyncAny(resolve, callback)
 })
 
-test.cb('continuation (x)', t => {
+test.cb('callback (x)', t => {
     t.plan(2)
 
-    function continuation (error, result) {
+    function callback (error, result) {
         t.is(error, ERROR)
         t.falsy(result)
         t.end()
     }
 
-    asyncAny(reject, continuation)
+    asyncAny(reject, callback)
 })
 
 test('promise (✔)', t => {
