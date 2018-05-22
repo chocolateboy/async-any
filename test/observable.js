@@ -1,13 +1,11 @@
-import asyncAny   from '../dist/async-any.js'
-import test       from 'ava'
-import sleep      from 'p-promise'
-import Observable from 'zen-observable'
-
-const { DELAY, ERROR, RESULT } = require('./config.json')
+import asyncAny                 from '../dist/async-any.js'
+import { ERROR, RESULT, sleep } from './_helpers.js'
+import test                     from 'ava'
+import Observable               from 'zen-observable'
 
 function resolve () {
     return new Observable(observer => {
-        sleep(DELAY).then(() => {
+        sleep().then(() => {
             observer.next(RESULT)
             observer.complete()
         })
@@ -16,7 +14,7 @@ function resolve () {
 
 function reject () {
     return new Observable(observer => {
-        sleep(DELAY).then(() => {
+        sleep().then(() => {
             observer.error(ERROR)
         })
     })

@@ -1,18 +1,16 @@
-import asyncAny from '../dist/async-any.js'
-import test     from 'ava'
-import sleep    from 'p-promise'
-
-const { DELAY, ERROR, RESULT } = require('./config.json')
+import asyncAny                 from '../dist/async-any.js'
+import { ERROR, RESULT, sleep } from './_helpers.js'
+import test                     from 'ava'
 
 function resolve () {
     return new Promise((resolve, reject) => {
-        sleep(DELAY).then(() => resolve(RESULT))
+        sleep().then(() => resolve(RESULT))
     })
 }
 
 function reject () {
     return new Promise((resolve, reject) => {
-        sleep(DELAY).then(() => reject(ERROR))
+        sleep().then(() => reject(ERROR))
     })
 }
 
