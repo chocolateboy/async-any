@@ -134,7 +134,7 @@ The following Gulp tasks are available:
 
 # VERSION
 
-0.0.5
+1.0.0
 
 # AUTHOR
 
