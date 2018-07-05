@@ -18,6 +18,9 @@ env:
 
 parser: babel-eslint
 
+parserOptions:
+  ecmaVersion: 2018
+
 plugins:
   - standard # not the community standard, but close enough
 
