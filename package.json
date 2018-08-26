@@ -11,7 +11,7 @@
     ],
     "scripts": {
         "prepublishOnly": "gulp clean && cross-env NODE_ENV=production npm run test",
-        "test": "gulp && ava --verbose"
+        "test": "gulp && ava --verbose ./test"
     },
     "dependencies": {
         "@babel/runtime": "^7.0.0-rc.1",
