@@ -14,16 +14,16 @@
         "test": "gulp && ava --verbose ./test"
     },
     "dependencies": {
-        "@babel/runtime": "^7.0.0-rc.1",
+        "@babel/runtime": "^7.0.0",
         "is-observable": "^1.1.0",
         "is-promise": "^2.1.0",
         "observable-to-promise": "^0.5.0",
         "onetime": "^2.0.1"
     },
     "devDependencies": {
-        "@babel/core": "^7.0.0-rc.1",
-        "@babel/plugin-transform-runtime": "^7.0.0-rc.1",
-        "@babel/preset-env": "^7.0.0-rc.1",
+        "@babel/core": "^7.0.0",
+        "@babel/plugin-transform-runtime": "^7.0.0",
+        "@babel/preset-env": "^7.0.0",
         "ava": "1.0.0-beta.4",
         "babel-eslint": "^9.0.0",
         "cross-env": "^5.2.0",
