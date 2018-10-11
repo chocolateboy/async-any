@@ -14,7 +14,7 @@
         "test": "gulp && ava --verbose ./test"
     },
     "dependencies": {
-        "@babel/runtime": "^7.0.0",
+        "@babel/runtime": "^7.1.2",
         "is-observable": "^1.1.0",
         "is-promise": "^2.1.0",
         "observable-to-promise": "^0.5.0",
