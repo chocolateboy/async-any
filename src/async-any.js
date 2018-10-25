@@ -6,7 +6,7 @@ import once                from 'onetime'
 const Prefer = { PROMISE: [], OBSERVABLE: [] }
 
 const Strategy = {
-    preferPromise: future    => Prefer.PROMISE,
+    preferPromise:    future => Prefer.PROMISE,
     preferObservable: future => Prefer.OBSERVABLE,
 }
 
