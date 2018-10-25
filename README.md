@@ -37,18 +37,17 @@ async-any - manage various forms of asynchronous completion in a uniform way
 ```javascript
 import asyncAny from 'async-any'
 
-function runTask (task) {
-    asyncAny(task, (error, result) => {
-        if (!error) console.log('got result:', result)
-    })
-}
+// a task is an asynchronous function which either takes a `done` callback
+const task = done => fs.stat(path, done)
 
-// or
+// or returns a promise or observable
+const task = () => fetch(url)
 
-async function runTask (task) {
-    let result = await asyncAny(task)
-    console.log('got result:', result)
-}
+// asyncAny treats them uniformly and either passes the task's result to a callback
+asyncAny(task, (error, result) => { ... })
+
+// or returns it as a promise
+const result = await asyncAny(task)
 ```
 
 # DESCRIPTION
@@ -60,8 +59,8 @@ or returning an [observable](https://github.com/tc39/proposal-observable).
 ## Why?
 
 I wanted a lightweight version of [async-done](https://www.npmjs.com/package/async-done)
-without the [bugs](https://github.com/gulpjs/async-done/issues/36), with stricter
-detection of promises and observables, with an optional promise API, and with browser
+without the [bugs](https://github.com/gulpjs/async-done/issues/36), with smarter
+handling of promises and observables, with an optional promise API, and with browser
 support.
 
 ## Why Not?
@@ -81,14 +80,20 @@ If you need support for these, use async-done.
 * asyncAny(task: (done: Errback) ⇒ Promise|Observable|void) ⇒ Promise
 
 ```javascript
-// async task taking a `done` callback
-asyncAny(done => fs.stat(path, done), (error, result) => { ... })
+import asyncAny from 'async-any'
 
-// async task returning a promise or observable
-asyncAny(() => fetch(url), (error, result) => { ... })
+function runTask (task) {
+    asyncAny(task, (error, result) => {
+        if (!error) console.log('got result:', result)
+    })
+}
 
-// returns a promise if the callback is omitted
-let result = await asyncAny(task)
+// or
+
+async function runTask (task) {
+    let result = await asyncAny(task)
+    console.log('got result:', result)
+}
 ```
 
 Takes an asynchronous task (function) and a callback. The task is passed a `done`
