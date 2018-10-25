@@ -14,6 +14,9 @@
   - [Why Not?](#why-not)
 - [EXPORTS](#exports)
   - [asyncAny (default)](#asyncany-default)
+  - [AsyncAny](#asyncany)
+  - [Prefer](#prefer)
+  - [preferObservable](#preferobservable)
 - [DEVELOPMENT](#development)
   - [NPM Scripts](#npm-scripts)
   - [Gulp Tasks](#gulp-tasks)
@@ -107,7 +110,81 @@ If the callback is omitted, a promise is returned, which is fulfilled/rejected
 by the corresponding result/error.
 
 If the task returns a value which is both a promise and an observable, it is
-treated as a promise.
+treated as a promise by default. This can be resolved in favor of the observable
+by importing the [`preferObservable`](#preferobservable) function, which otherwise
+behaves the same as the default export e.g.:
+
+```javascript
+import { preferObservable as asyncAny } from 'async-any'
+```
+
+Alternatively, more fine-grained control can be exercised by providing a resolution
+strategy (function) to the [`AsyncAny`](#asyncany) builder:
+
+```javascript
+import { AsyncAny, Prefer } from 'async-any'
+
+const asyncAny = AsyncAny(future => ...) // return Prefer.PROMISE or Prefer.OBSERVABLE
+```
+
+## AsyncAny
+
+A builder for asyncAny functions which takes a strategy (function) as a parameter.
+The strategy takes a future which is both a promise and an observable and returns
+a [`value`](#prefer) which indicates whether it should be resolved as a promise or
+an observable.
+
+The [`asyncAny`](#asyncany-default) and [`preferObservable`](#preferobservable)
+functions exported by this module can easily be recreated with this builder e.g.:
+
+```javascript
+import { AsyncAny, Prefer } from 'async-any'
+
+const asyncAny = AsyncAny()
+const preferObservable = AsyncAny(future => Prefer.OBSERVABLE)
+```
+
+## Prefer
+
+**Type**:
+
+```typescript
+type Prefer = {
+    PROMISE: any,
+    OBSERVABLE: any,
+}
+```
+
+An object containing two constant values which are used to resolve a tie-break
+when a future is both a promise and an observable. Used in conjunction with the
+[`AsyncAny`](#asyncany) builder to create a custom version of [`asyncAny`](#asyncany-default)
+with fine-grained control over how it handles futures that are both promises
+and observables:
+
+```javascript
+import { AsyncAny, Prefer } from 'async-any'
+
+// always resolve the future as a promise
+const asyncAny = AsyncAny(future => Prefer.PROMISE)
+
+// always resolve the future as an observable
+const asyncAny = AsyncAny(future => Prefer.OBSERVABLE)
+
+// custom resolution
+const asyncAny = AsyncAny(future => isFoo(future) ? Prefer.OBSERVABLE : Prefer.PROMISE)
+```
+
+## preferObservable
+
+**Signature**:
+
+* preferObservable(task: (done: Errback) ⇒ Promise|Observable|void, callback: Errback) ⇒ void
+* preferObservable(task: (done: Errback) ⇒ Promise|Observable|void) ⇒ Promise
+
+A version of [`asyncAny`](#asyncany-default) which treats futures that are both
+promises and observables as observables rather than promises i.e. their
+completion occurs when the observable is completed rather than when the promise
+is fulfilled or rejected.
 
 # DEVELOPMENT
 
