@@ -1,6 +1,6 @@
-import asyncAny                 from '../dist/async-any.js'
-import { ERROR, RESULT, sleep } from './_helpers.js'
-import test                     from 'ava'
+const test                     = require('ava')
+const asyncAny                 = require('..')
+const { ERROR, RESULT, sleep } = require('./_helpers.js')
 
 function resolve (done) {
     sleep().then(() => done(null, RESULT))

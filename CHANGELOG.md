@@ -1,3 +1,10 @@
+## 2.0.0 - TBD
+
+- **Breaking changes**:
+  - drop support for Observables
+  - drop support for legacy browsers
+- migrate to TypeScript
+
 ## 1.0.0 - 2018-06-04
 
 * clean up tests

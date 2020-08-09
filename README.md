@@ -1,32 +1,39 @@
 # async-any
 
-[![Build Status](https://secure.travis-ci.org/chocolateboy/async-any.svg)](http://travis-ci.org/chocolateboy/async-any)
-[![NPM Version](http://img.shields.io/npm/v/async-any.svg)](https://www.npmjs.org/package/async-any)
+[![Build Status](https://travis-ci.org/chocolateboy/async-any.svg)](https://travis-ci.org/chocolateboy/async-any)
+[![NPM Version](https://img.shields.io/npm/v/async-any.svg)](https://www.npmjs.org/package/async-any)
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<!-- toc -->
 
 - [NAME](#name)
+- [FEATURES](#features)
 - [INSTALLATION](#installation)
 - [SYNOPSIS](#synopsis)
 - [DESCRIPTION](#description)
   - [Why?](#why)
   - [Why Not?](#why-not)
+- [TYPES](#types)
 - [EXPORTS](#exports)
   - [asyncAny (default)](#asyncany-default)
 - [DEVELOPMENT](#development)
   - [NPM Scripts](#npm-scripts)
-  - [Gulp Tasks](#gulp-tasks)
+- [COMPATIBILITY](#compatibility)
 - [SEE ALSO](#see-also)
 - [VERSION](#version)
 - [AUTHOR](#author)
 - [COPYRIGHT AND LICENSE](#copyright-and-license)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- tocstop -->
 
 # NAME
 
 async-any - manage various forms of asynchronous completion in a uniform way
+
+# FEATURES
+
+  - more lightweight than [async-done](https://www.npmjs.com/package/async-done)
+  - works in Node.js and the browser
+  - fully typed (TypeScript)
 
 # INSTALLATION
 
@@ -40,7 +47,7 @@ import asyncAny from 'async-any'
 // a task is an asynchronous function which either takes a `done` callback
 const task = done => fs.stat(path, done)
 
-// or returns a promise or observable
+// or returns a promise
 const task = () => fetch(url)
 
 // asyncAny treats them uniformly and either passes the task's result to a callback
@@ -52,23 +59,36 @@ const result = await asyncAny(task)
 
 # DESCRIPTION
 
-This module exports a function which provides a uniform way to handle tasks which
-signal completion asynchronously — either by calling a callback, returning a promise,
-or returning an [observable](https://github.com/tc39/proposal-observable).
+This module exports a function which provides a uniform way to handle tasks
+which signal completion asynchronously, either by calling a callback or
+returning a promise.
 
 ## Why?
 
-I wanted a lightweight version of [async-done](https://www.npmjs.com/package/async-done)
-without the [bugs](https://github.com/gulpjs/async-done/issues/36), with smarter
-handling of promises and observables, with an optional promise API, and with browser
-support.
+I needed a lightweight version of
+[async-done](https://www.npmjs.com/package/async-done) with an optional promise
+API and browser support.
 
 ## Why Not?
 
-async-any doesn't support event emitters, ChildProcess or other kinds of Node.js
-[streams](https://github.com/substack/stream-handbook) (unless they also happen to
-be [promises](https://github.com/sindresorhus/cp-file) or observables).
-If you need support for these, use async-done.
+async-any doesn't support event emitters, observables, ChildProcess or other
+kinds of Node.js [streams](https://github.com/substack/stream-handbook) (unless
+they [also](https://github.com/sindresorhus/cp-file) happen to be promises). If
+you need support for these, use an adapter such as
+[event-to-promise](https://www.npmjs.com/package/event-to-promise) or
+[observable-to-promise](https://www.npmjs.com/package/observable-to-promise),
+or use async-done.
+
+# TYPES
+
+The following types are referenced in the descriptions below.
+
+```typescript
+type Callback<T> = (err: any, result?: T) => void;
+type PromiseTask<T> = () => PromiseLike<T>;
+type CallbackTask<T> = (done: Callback<T>) => void;
+type Task<T> = PromiseTask<T> | CallbackTask<T>;
+```
 
 # EXPORTS
 
@@ -76,8 +96,8 @@ If you need support for these, use async-done.
 
 **Signature**:
 
-* asyncAny(task: (done: Errback) ⇒ Promise|Observable|void, callback: Errback) ⇒ void
-* asyncAny(task: (done: Errback) ⇒ Promise|Observable|void) ⇒ Promise
+- `asyncAny<T>(task: Task<T>, callback: Callback<T>): void`
+- `asyncAny<T>(task: Task<T>): Promise<T>`
 
 ```javascript
 import asyncAny from 'async-any'
@@ -91,23 +111,20 @@ function runTask (task) {
 // or
 
 async function runTask (task) {
-    let result = await asyncAny(task)
+    const result = await asyncAny(task)
     console.log('got result:', result)
 }
 ```
 
-Takes an asynchronous task (function) and a callback. The task is passed a `done`
-["errorback"](http://thenodeway.io/posts/understanding-error-first-callbacks/)
-function which can be used to signal completion. Alternatively, the task can return
-a promise or an observable and will be deemed complete when that "future"
-succeeds or fails.
+Takes an asynchronous task (function) and an optional callback. The task is
+passed a `done`
+["errorback"](https://thenodeway.io/posts/understanding-error-first-callbacks/)
+function which can be used to signal completion. Alternatively, the task can
+return a promise and is deemed complete when it succeeds or fails.
 
-Once the task has completed, its error/result is forwarded to the callback.
-If the callback is omitted, a promise is returned, which is fulfilled/rejected
-by the corresponding result/error.
-
-If the task returns a value which is both a promise and an observable, it is
-treated as a promise.
+Once the task has completed, its error/result is forwarded to the callback. If
+the callback is omitted, a promise is returned, which is fulfilled/rejected by
+the task's corresponding result/error.
 
 # DEVELOPMENT
 
@@ -117,19 +134,25 @@ treated as a promise.
 
 The following NPM scripts are available:
 
-* test - lint the codebase, compile the library, and run the test suite
-
-## Gulp Tasks
-
-The following Gulp tasks are available:
-
-* build - compile the library and save it to the target directory
-* clean - remove the target directory and its contents
-* default - run the `lint` and `build` tasks
-* dump:config - print the build config settings to the console
-* lint - check and report style and usage errors in the gulpfile, source file(s) and test file(s)
+- build - compile the library for testing and save to the target directory
+- build:release - compile the library for release and save to the target directory
+- clean - remove the target directory and its contents
+- doctoc - generate the README's TOC (table of contents)
+- rebuild - clean the target directory and recompile the library
+- test - recompile the library and run the test suite
+- test:run - run the test suite
+- typecheck - sanity check the library's type definitions
 
 </details>
+
+# COMPATIBILITY
+
+The following [targets](https://browserl.ist/?q=Maintained+Node+versions%2C+Last+2+Chrome+versions%2C+Last+2+Safari+versions%2C+Firefox+ESR) are supported:
+
+- Firefox ESR
+- Last 2 Chrome versions
+- Last 2 Safari versions
+- [Maintained Node.js versions](https://github.com/nodejs/Release#readme)
 
 # SEE ALSO
 
@@ -139,7 +162,7 @@ The following Gulp tasks are available:
 
 # VERSION
 
-1.0.0
+2.0.0
 
 # AUTHOR
 
@@ -147,7 +170,7 @@ The following Gulp tasks are available:
 
 # COPYRIGHT AND LICENSE
 
-Copyright © 2018 by chocolateboy.
+Copyright © 2019-2020 by chocolateboy.
 
 This is free software; you can redistribute it and/or modify it under the
-terms of the [Artistic License 2.0](http://www.opensource.org/licenses/artistic-license-2.0.php).
+terms of the [Artistic License 2.0](https://www.opensource.org/licenses/artistic-license-2.0.php).
